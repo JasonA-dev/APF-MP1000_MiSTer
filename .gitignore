@@ -38,3 +38,7 @@ c5_pin_model_dump.txt
 *_netlist
 *.cdf
 **/.DS_Store
+verilator/obj_dir/
+verilator/.vs/sim/v17/Browse.VC.db
+verilator/.vs/sim/FileContentIndex/
+verilator/x64/Debug/

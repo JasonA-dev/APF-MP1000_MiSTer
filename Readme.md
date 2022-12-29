@@ -1,9 +1,7 @@
-# Template core for MiSTer
-
+# APF-MP1000 & "Imagination Engine" for MiSTer
+"
 ## General description
-This core contains the latest version of framework and will be updated when framework is updated. There will be no releases. This core is only for developers. Besides the framework, core demonstrates the basic usage. New or ported cores should use it as a template.
-
-It's highly recommended to follow the notes to keep it standardized for easier maintenance and collaboration with other developers.
+The APF MP1000 console was plugged in to the Imagination Engine to upgrade it to a personal computer. Rather than creating two separate cores, this MP1000 core will add enhancements from the Imagination Engine hardware.
 
 ## Source structure
 

@@ -1,0 +1,71 @@
+Video controller M6847.
+
+1 Kb RAM at the address 0000-03ff, visible also at the addresses
+0400-1fff.  This is the memory accessible by the video controller.
+
+2 Kb ROM, at the address 4000-47ff. It is also accessed at the
+addresses 4800-5fff and e000-ffff.
+
+4 Kb ROM at the address 6800-77ff and 8Kb ROM at 8000-9fff, that would
+correspond to a removable cartridge.
+
+8 Kb RAM at the address a000-bfff, with an optional expansion of 8K (until dfff).
+
+2 floppy drives with 68 Kb each.
+
+
+Of the CPU only the documented instructions are emulated, although it
+would be easy to add the undocumented ones, that according to my
+knowledge are duplicates of the other, with the only exception of
+STA,immediate, that has a very doubtful utility.  Neither are emulated
+the instructions 3E (WAI) and 3F (SWI), that with the current ROM are
+not useful.
+
+Of the 6847 controller are emulated the modes that the APF can use, i.e.
+the text mode, the 256x192 graphic mode, that as a matter of fact
+works like a text mode with programmable characters, and th 128x192 color
+graphic mode.
+
+The diskettes are substituted by images of the same in files of 68 Kb,
+selectables, with the extension .APD.  The operation of the controller
+has been deduced from the BASIC ROM. The function FORMAT is not
+emulated. It is simply ignored.
+
+The cassette is represented by a selectable file of variable length.
+Two formats are available:
+Files with extension .APT.  They allow only recording the way that BASIC 
+does:  a 500 microsecond cycle in order to represent a 0 and an 1 ms one 
+for a 1. The image of the tape is the juxtaposition of the recorded bits.
+Files with extension .APW. They allow recording in special formats and 
+recording audio. They are audio files sampled at 11025 Hz 8 bits unsigned 
+mono, without header. The bit 1 stores the state of the recording head.
+These files are a deal bigger than the .APT ones.
+
+The serial interface is emulated with two files, in one of them is stored
+the output and from the other is read the input. The input file can be used
+to load a program from a ASCII file (with PRINT=2). In this case, it is 
+advisable begin the file with one or several blank lines and end it with a line
+containing the command PRINT=0, to switch to keyboard input.
+
+
+The keyboard and the two joysticks, as well as the cassette keys are
+made correspond to keys of a standard AT keyboard. The correspondence
+depends on the keyboard language specified in the control panel. With a
+Spanish Traditional or English USA layouts, the correspondence should be as
+shown in the file TECLADO. With other configurations, the equivalence of the
+keys can differ largely. This effect can be corrected with a file named 
+APF_EMU.KYS in which can be specified the new equivalences. In each line they
+must be two numbers. The first correspond to the value produced by Windows
+when the key is pressed (it can be seen between the two N's in the keyboard
+image) and the second the value of the correspondent key in the APF. The best 
+course is to export the current values with the option "Exportar teclas" in 
+the submenu "Utilidades" in the right button menu and then to edit the required 
+values in the first column.
+In any case, the Caps Lock option must be "on".
+Some keys have special function and cannot be redefined.
+F12 activates the buttons in the window.
+F11 stands for the "Audio Record" key in the cassette.
+grey / stands for "Rewind" in the cassette.
+grey * stands for "Play" in the cassette.
+grey - stands for "Fast Forward" in the cassette.
+

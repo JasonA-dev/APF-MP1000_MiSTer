@@ -1,0 +1,13 @@
+CPU: 8-bit 0.89 MHz Motorola 6800 (3.579 MHz Oscillator divided by 4)
+ROM: 14 KB
+RAM: 9 KB expandable to 17 KB (8 KB / 16 KB + 1 KB)
+Video Display Controller: MC6847
+Resolutions: 256×192×4 / 128×192×8
+Colors: 8
+One sound channel in 5 octaves
+Two controllers:
+13 buttons
+0-9 numeric keypad
+Clear and End key
+Trigger
+4-way joystick
