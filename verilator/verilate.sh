@@ -6,4 +6,5 @@ verilator \
 -Wno-fatal \
 --top-module top sim.v \
 ../rtl/MP1000.v \
-../rtl/dpram.sv
+../rtl/dpram.sv \
+../rtl/rom.v

@@ -55,7 +55,8 @@ CC_OPT = -O
 V_SRC = \
 	sim.v \
 	$(RTL)/MP1000.v \
-	$(RTL)/dpram.sv
+	$(RTL)/dpram.sv \
+	$(RTL)/rom.v
 
 C_SRC = \
 	sim_main.cpp  \

@@ -50,6 +50,37 @@ mc6847 U11(
 );
 */
 
+wire  [7:0]  romDo_apf4000;
+wire [11:0]  romA;
+rom #(.AW(16), .FN("../bios/mame/apf_4000.hex")) Rom_APF4000
+(
+	.clock      (clk_sys        ),
+	.ce         (1'b1           ),
+	.data_out   (romDo_apf4000  ),
+	.a          (romA[10:0]     )
+);
+/*
+wire  [7:0]  romDo_modbios;
+wire [11:0]  romB;
+rom #(.AW(16), .FN("../bios/mame/mod-bios.hex")) Rom_modbios
+(
+	.clock      (clk_sys        ),
+	.ce         (1'b1           ),
+	.data_out   (romDo_modbios  ),
+	.a          (romB[10:0]     )
+);
+
+wire  [7:0]  romDo_trashii;
+wire [11:0]  romC;
+rom #(.AW(16), .FN("../bios/mame/trash-ii.hex")) Rom_trashii
+(
+	.clock      (clk_sys        ),
+	.ce         (1'b1           ),
+	.data_out   (romDo_trashii  ),
+	.a          (romC[10:0]     )
+);
+*/
+
 dpram #(8, 12) dpram
 (
 	.clk_sys(clk_sys),
@@ -64,6 +95,5 @@ dpram #(8, 12) dpram
 	.ram_d_b(),
 	.ram_q_b()
 );
-
 
 endmodule

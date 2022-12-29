@@ -250,7 +250,8 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 
 ///////////////////////   CLOCKS   ///////////////////////////////
 
-wire clk_sys;
+wire clk_sys, clk_vid;
+assign clk_vid = clk_sys;
 pll pll
 (
 	.refclk(CLK_50M),
@@ -294,7 +295,7 @@ MP1000 MP1000
 	.video(video)
 );
 
-assign CLK_VIDEO = clk_sys;
+assign CLK_VIDEO = clk_vid;
 assign CE_PIXEL = ce_pix;
 
 assign VGA_DE = ~(HBlank | VBlank);
