@@ -1,7 +1,7 @@
 # APF-MP1000 & "Imagination Engine" for MiSTer
 "
 ## General description
-The APF MP1000 console was plugged in to the Imagination Engine to upgrade it to a personal computer. Rather than creating two separate cores, this MP1000 core will add enhancements from the Imagination Engine hardware.
+The APF MP1000 console was slotted on top of the APF MPA-10 base unit, called the "Imagination Engine" to upgrade it to a personal computer. Rather than creating two separate cores, this MP1000 core will add enhancements from the Imagination Engine hardware.
 
 ## Source structure
 
