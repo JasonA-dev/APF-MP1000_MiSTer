@@ -7,4 +7,8 @@ verilator \
 --top-module top sim.v \
 ../rtl/MP1000.v \
 ../rtl/dpram.sv \
-../rtl/rom.v
+../rtl/rom.v \
+../rtl/mc6847/mc6847.v \
+../rtl/mc6847/rom_char.v \
+../rtl/mc6800/mc6801_core.v \
+../rtl/mc6821/pia6821.v

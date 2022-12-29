@@ -56,7 +56,11 @@ V_SRC = \
 	sim.v \
 	$(RTL)/MP1000.v \
 	$(RTL)/dpram.sv \
-	$(RTL)/rom.v
+	$(RTL)/rom.v \
+	$(RTL)/mc6847/mc6847.v \
+	$(RTL)/mc6847/rom_char.v
+	$(RTL)/mc6800/mc6801_core.v \
+	$(RTL)/mc6821/pia6821.v
 
 C_SRC = \
 	sim_main.cpp  \

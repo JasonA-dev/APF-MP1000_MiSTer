@@ -53,7 +53,7 @@ module top(
    assign AUDIO_L = {audio,audio};
    assign AUDIO_R = AUDIO_L;
 
-wire ce_pix = 1'b1;
+wire ce_pix; // = 1'b1;
 wire reset = ioctl_download;
 
 reg key_strobe;
