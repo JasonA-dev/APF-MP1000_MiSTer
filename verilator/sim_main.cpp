@@ -252,7 +252,7 @@ int main(int argc, char** argv, char** env) {
 	// Setup video output
 	if (video.Initialise(windowTitle) == 1) { return 1; }
 
-	//bus.QueueDownload("./boot.rom", 0, true);
+	bus.QueueDownload("./boot.rom", 0, true);
 
 
 #ifdef WIN32
@@ -304,8 +304,8 @@ int main(int argc, char** argv, char** env) {
 		if (ImGui::Button("Multi Step")) { run_enable = 0; multi_step = 1; }
 		//ImGui::SameLine();
 		ImGui::SliderInt("Multi step amount", &multi_step_amount, 8, 1024);
-		if (ImGui::Button("Load ST2"))
-    	ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".st2", ".");
+		if (ImGui::Button("Load APT"))
+    	ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".apt", ".");
 		ImGui::SameLine();
 		if (ImGui::Button("Load BIN"))
     	ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".bin", ".");
@@ -320,32 +320,16 @@ int main(int argc, char** argv, char** env) {
 		mem_edit.DrawContents(&top->top__DOT__MP1000__DOT__Rom_APF4000__DOT__d, 2048, 0);
 		ImGui::End();
 		ImGui::Begin("DPRAM");
-		mem_edit.DrawContents(&top->top__DOT__MP1000__DOT__dpram__DOT__mem, 4096, 0);
+		mem_edit.DrawContents(&top->top__DOT__MP1000__DOT__dpram__DOT__mem, 65536, 0);
 		ImGui::End();		
-/*
-		// Debug 1802 cpu
-		ImGui::Begin("CDP 1802 Registers");
-		ImGui::Text("P:       0x%04X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__P);	
-		ImGui::Text("X:       0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__X);
-		ImGui::Text("R:       0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__R);	
-		ImGui::Text("Ra:      0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__Ra);			
-		ImGui::Text("Rrd:     0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__Rrd);	
-		ImGui::Text("Rwd:     0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__Rwd);	
-		ImGui::Text("D:       0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__D);
-		ImGui::Text("DF:      0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__DF);	
-		ImGui::Text("B:       0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__B);	
-		ImGui::Text("I:       0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__I);	
-		ImGui::Text("N:       0x%02X", top->top__DOT__rcastudio__DOT__cdp1802__DOT__N);	
-		ImGui::Spacing();		
-		ImGui::End();
-*/
+
 		ImGui::Begin("MC6801 CPU");
 		ImGui::Text("rst:        0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__rst);	
 		ImGui::Text("rw:         0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__rw);
 		ImGui::Text("vma:        0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__vma);	
 		ImGui::Text("address:    0x%04X", top->top__DOT__MP1000__DOT__mc6801__DOT__address);
-		ImGui::Text("data_in:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__data_in);	
-		ImGui::Text("data_out:   0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__data_out);	
+		ImGui::Text("data_in:    0x%04X", top->top__DOT__MP1000__DOT__mc6801__DOT__data_in);	
+		ImGui::Text("data_out:   0x%04X", top->top__DOT__MP1000__DOT__mc6801__DOT__data_out);	
 		ImGui::Text("hold:       0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__hold);					
 		ImGui::Text("halt:       0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__halt);	
 		ImGui::Spacing();	
@@ -365,9 +349,9 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Text("rst:       0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__rst);		
 		ImGui::Text("cs:        0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__cs);	
 		ImGui::Text("rw:        0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__rw);
-		ImGui::Text("addr:      0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__addr);					
-		ImGui::Text("data_in:   0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__data_in);	
-		ImGui::Text("data_out:  0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__data_out);
+		ImGui::Text("addr:      0x%04X", top->top__DOT__MP1000__DOT__pia6821__DOT__addr);					
+		ImGui::Text("data_in:   0x%04X", top->top__DOT__MP1000__DOT__pia6821__DOT__data_in);	
+		ImGui::Text("data_out:  0x%04X", top->top__DOT__MP1000__DOT__pia6821__DOT__data_out);
 		ImGui::Spacing();			
 		ImGui::Text("irqa:      0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__irqa);
 		ImGui::Text("irqb:      0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__irqb);
@@ -389,27 +373,27 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Text("clk_ena:        0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__clk_ena);			
 		ImGui::Text("reset:          0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__reset);	
 		ImGui::Text("da0:            0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__da0);
-		ImGui::Text("videoaddr:      0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__videoaddr);		
+		ImGui::Text("videoaddr:      0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__videoaddr);		
 		ImGui::Text("dd:             0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__dd);
 		ImGui::Text("an_g:           0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__an_g);	
 		ImGui::Text("an_s:           0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__an_s);			
 		ImGui::Text("intn_ext:       0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__intn_ext);	
 		ImGui::Text("gm:             0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__gm);							
-		ImGui::Text("css:            0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__css);
-		ImGui::Text("inv:            0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__inv);
-		ImGui::Text("red:            0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__red);
+		ImGui::Text("css:            0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__css);
+		ImGui::Text("inv:            0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__inv);
+		ImGui::Text("red:            0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__red);
 		ImGui::Text("green:          0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__green);		
-		ImGui::Text("blue:           0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__blue);
+		ImGui::Text("blue:           0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__blue);
 		ImGui::Spacing();	
 		ImGui::Text("hsync:          0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__hsync);
 		ImGui::Text("vsync:          0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__vsync);
 		ImGui::Text("hblank:         0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__hblank);
 		ImGui::Text("vblank:         0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__vblank);		
 		ImGui::Text("artifact_en:    0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__artifact_en);								
-		ImGui::Text("artifact_set:   0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__artifact_set);
-		ImGui::Text("artifact_phase: 0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__artifact_phase);
+		ImGui::Text("artifact_set:   0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__artifact_set);
+		ImGui::Text("artifact_phase: 0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__artifact_phase);
 		ImGui::Text("cvbs:           0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__cvbs);		
-		ImGui::Text("black_backgnd:  0x%04X", top->top__DOT__MP1000__DOT__mc6847__DOT__black_backgnd);
+		ImGui::Text("black_backgnd:  0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__black_backgnd);
 		ImGui::Text("pixel_clk:      0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__pixel_clk);		
 		ImGui::End();
 
@@ -431,30 +415,6 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Spacing();														
 		ImGui::End();
 
-		// Debug Keypad 1
-//		ImGui::Begin("Keypad 1");
-//		ImGui::Text("btnKP1: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1);	
-		/*ImGui::Text("btnKP1_2: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_2);
-		ImGui::Text("btnKP1_3: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_3);
-		ImGui::Text("btnKP1_4: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_4);
-		ImGui::Text("btnKP1_5: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_5);		
-		ImGui::Text("btnKP1_6: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_6);	
-		ImGui::Text("btnKP1_7: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_7);
-		ImGui::Text("btnKP1_8: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_8);
-		ImGui::Text("btnKP1_9: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_9);
-		ImGui::Text("btnKP1_0: 	0x%02X", top->top__DOT__rcastudio__DOT__btnKP1_0);	*/						
-//		ImGui::Spacing();														
-//		ImGui::End();
-
-/*
-		//PlayerA
-		ImGui::Begin("Controls");
-		ImGui::Text("Player A: 	0x%03X", top->top__DOT__rcastudio__DOT__playerA);
-		ImGui::Text("Player B: 	0x%03X", top->top__DOT__rcastudio__DOT__playerB);
-		ImGui::Text("KeyLatch: 	0x%03X", top->top__DOT__rcastudio__DOT__keylatch);
-		ImGui::Spacing();														
-		ImGui::End();
-*/		
 		// Trace/VCD window
 		ImGui::Begin(windowTitle_Trace);
 		ImGui::SetWindowPos(windowTitle_Trace, ImVec2(0, 870), ImGuiCond_Once);

@@ -43,15 +43,11 @@ module top(
    assign VGA_VB = VBlank;
    assign VGA_HB = HBlank;
 
-   // Convert 1bpp output to 8bpp
-   wire video;
-   assign VGA_R = video ? 'hFF : 'h00;
-   assign VGA_G = video ? 'hFF : 'h00;
-   assign VGA_B = video ? 'hFF : 'h00;
-    
    // MAP OUTPUTS
    assign AUDIO_L = {audio,audio};
    assign AUDIO_R = AUDIO_L;
+
+   assign VGA_DE = ~(HBlank | VBlank);
 
 wire ce_pix; // = 1'b1;
 wire reset = ioctl_download;
@@ -82,7 +78,9 @@ MP1000 MP1000
 
    .video_de(),  
 
-	.video(video)
+   .red(VGA_R),
+   .green(VGA_G),
+   .blue(VGA_B)
 );
 
 endmodule

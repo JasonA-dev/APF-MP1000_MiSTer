@@ -292,8 +292,12 @@ MP1000 MP1000
 	.VBlank(VBlank),
 	.VSync(VSync),
   	.video_de(),
-	.video(video)
+	.red(red),
+	.green(green),
+	.blue(blue)
 );
+
+wire [7:0] red, green, blue;
 
 assign CLK_VIDEO = clk_vid;
 assign CE_PIXEL = ce_pix;
@@ -301,9 +305,10 @@ assign CE_PIXEL = ce_pix;
 assign VGA_DE = ~(HBlank | VBlank);
 assign VGA_HS = HSync;
 assign VGA_VS = VSync;
-assign VGA_G  = (!col || col == 2) ? video : 8'd0;
-assign VGA_R  = (!col || col == 1) ? video : 8'd0;
-assign VGA_B  = (!col || col == 3) ? video : 8'd0;
+
+assign VGA_R = red;
+assign VGA_G = green;
+assign VGA_B = blue;
 
 /*
 reg  [26:0] act_cnt;

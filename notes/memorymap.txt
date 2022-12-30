@@ -20,3 +20,32 @@ void apf_state::apfimag_map(address_map &map)
 	map(0xc000, 0xdfff).ram(); // expansion
 }
 
+The Imagination Machine Memory Map
+
+         Address
+Hex				Decimal			Description/Usage
+-------------+---------------+--------------------------------------------------------------
+0000 - 03FF  |  0-1023       |	MP1000 internal memory. 1K of memory is used
+0400 - 1FFF  |  1024-8191    |	Each 1k block is same as 0000-03FF
+2000 - 2003  |  8192-8195    |	PIA 0 used in MP1000
+2004 - 3FFF  |  8196-16383   |	Each 4 consecutive adress is same as 2000-2003
+4000 - 5FFF  |  16384-24575  |	Internal ROM of MP1000
+6000 - 6003  |  24576-24579  |	PIA 1 used in MPA-10 section
+6004 - 63FF  |  24580-25599  |	Each 4 consecutive address is same as 6000-6003
+6400 - 67FF  |  25600-26623  |	For external I/O devices
+6800 - 77FF  |  26624-30719  |	Basic Interpreter ROM cartridge (4K)
+7800 - 7FFF  |  30720-32767  |	For ROM expansion
+8000 - 9FFF  |  32768-40959  |	Basic Interpreter ROM cartridge (8K)
+A000 - BFFF  |  40960-49151  |	RAM
+C000 - DFFF  |  49152-57343  |	Expansion RAM
+E000 - FFEF  |  57344-65519  |	Not used
+FFF0 - FFFF  |  65520-65535  |	MC6800 reset/interrupt vectors - ROM
+
+
+MP1000 Internal Memory Usage (0000-03FF)
+
+$HEX    		Length  	Description/Usage
+------------------------------------------------------------------------------------------------------------------
+$0000 - $017F	384 bytes   Graphics Mode - used for screen map. Alpha/Semi Mode - not used. Not used by Basic interpreter
+$0180 - $01FF	128 bytes   Used only by ROM cartridge games as scratch pad and stack area. Not used by Basic interpreter
+$0200 - $03FF	512 bytes   Alpha/Semi Mode - used for screen image. Graphics mode - used for object shape definitions
