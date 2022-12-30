@@ -226,6 +226,8 @@ wire        ioctl_wr;
 wire [24:0] ioctl_addr;
 wire  [7:0] ioctl_data;
 
+wire [31:0] joy0, joy1;
+
 hps_io #(.CONF_STR(CONF_STR)) hps_io
 (
 	.clk_sys(clk_sys),
@@ -245,7 +247,10 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 	.buttons(buttons),
 	.status(status),
 	
-	.ps2_key(ps2_key)	
+	.ps2_key(ps2_key),	
+
+	.joystick_0(joy0),
+	.joystick_1(joy1)	
 );
 
 ///////////////////////   CLOCKS   ///////////////////////////////
@@ -275,7 +280,6 @@ wire [7:0] video;
 MP1000 MP1000
 (
 	.clk_sys(clk_sys),
-	.clk_vid(clk_vid),
 	.reset(reset),
 	
 	.ioctl_download(ioctl_download),

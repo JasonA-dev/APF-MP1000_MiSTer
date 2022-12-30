@@ -345,6 +345,26 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Spacing();		
 		ImGui::End();
 
+/*
+		ImGui::Begin("MC6803 CPU");
+		ImGui::Text("RST:         0x%02X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__RST);	
+		ImGui::Text("hold:        0x%02X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__hold);
+		ImGui::Text("halt:        0x%02X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__halt);	
+		ImGui::Text("irq:         0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__irq);
+		ImGui::Text("nmi:         0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__nmi);	
+		ImGui::Text("PORT_A_IN:   0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__PORT_A_IN);	
+		ImGui::Text("PORT_B_IN:   0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__PORT_B_IN);					
+		ImGui::Text("DATA_IN:     0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__DATA_IN);	
+		ImGui::Spacing();	
+		ImGui::Text("PORT_A_OUT:  0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__PORT_A_OUT);
+		ImGui::Text("PORT_B_OUT:  0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__PORT_B_OUT);	
+		ImGui::Text("ADDRESS:     0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__ADDRESS);	
+		ImGui::Text("DATA_OUT:    0x%04X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__DATA_OUT);			
+		ImGui::Text("E_CLK:       0x%02X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__E_CLK);	
+		ImGui::Text("rw:          0x%02X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__rw);	
+		ImGui::Spacing();		
+		ImGui::End();
+*/
 		ImGui::Begin("MC6821 PIA");
 		ImGui::Text("rst:       0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__rst);		
 		ImGui::Text("cs:        0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__cs);	

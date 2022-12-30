@@ -36,9 +36,9 @@ module mc6847 (
    parameter CVBS_NOT_VGA       = 0;
 
    parameter H_FRONT_PORCH      = 8;
-   parameter H_HORIZ_SYNC       = H_FRONT_PORCH + 48;
+   parameter H_HORIZ_SYNC       = H_FRONT_PORCH + 48; 
    parameter H_BACK_PORCH       = H_HORIZ_SYNC + 24;
-   parameter H_LEFT_BORDER      = H_BACK_PORCH + 32;  // adjust for hblank de-assert @sys_count=6
+   parameter H_LEFT_BORDER      = H_BACK_PORCH + 8; // + 16 // + 32 adjust for hblank de-assert @sys_count=6
    parameter H_LEFT_RSTADDR     = H_LEFT_BORDER - 16;
    parameter H_VIDEO            = H_LEFT_BORDER + 256;
    parameter H_RIGHT_BORDER     = H_VIDEO + 31;
@@ -47,7 +47,7 @@ module mc6847 (
    parameter V2_FRONT_PORCH     = 2;
    parameter V2_VERTICAL_SYNC   = V2_FRONT_PORCH + 2;
    parameter V2_BACK_PORCH      = V2_VERTICAL_SYNC + 12;
-   parameter V2_TOP_BORDER      = V2_BACK_PORCH + 26;  // + 25;  // +25 for PAL
+   parameter V2_TOP_BORDER      = V2_BACK_PORCH + 8; // + 26;  // + 25;  // +25 for PAL
    parameter V2_VIDEO           = V2_TOP_BORDER + 192;
    parameter V2_BOTTOM_BORDER   = V2_VIDEO + 27;  // + 25;       // +25 for PAL
    parameter V2_TOTAL_PER_FIELD = V2_BOTTOM_BORDER;

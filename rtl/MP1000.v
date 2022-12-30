@@ -25,9 +25,17 @@ reg [3:0] clk_vid;
 always @(posedge clk_sys)
   clk_vid <= clk_vid + 4'd1;
 
+wire [7:0] KR, kb_rows;
 wire rw;
 reg [15:0] address;
+wire [12:0] vdg_addr;
+reg [7:0]  ram_din_a;
+reg [7:0]  ram_dout_a;
+reg [7:0]  ram_din_b;
+reg [7:0]  ram_dout_b;
+wire E_CLK;
 
+// CPU
 mc6801_core mc6801
 (
 	.clk(clk_sys), 			// I
@@ -35,11 +43,11 @@ mc6801_core mc6801
 	.rw(rw),				// O
 	.vma(),					// O
 	.address(address),		// O [15:0]
-	.data_in(ram_dout_b),	// I [7:0]
-	.data_out(ram_din_b),	// O [7:0]
-	.hold(),				// I
-	.halt(),				// I
-	.irq(),					// I
+	.data_in(ram_dout_a),	// I [7:0]
+	.data_out(ram_din_a),	// O [7:0]
+	.hold(0),				// I
+	.halt(0),				// I
+	.irq(0),				// I
 	.nmi(),					// I
 	.irq_icf(),				// I
 	.irq_ocf(),				// I
@@ -49,14 +57,33 @@ mc6801_core mc6801
 	.test_cc()				// O [7:0]
 );
 
-reg [12:0] vdg_addr;
-reg [7:0]  ram_din_b;
-reg [7:0]  ram_dout_b;
+/*
+// CPU
+MC6803_gen2 mc6803gen2
+(
+  .clk(clk_sys), 		// I
+  .RST(reset),			// I
+  .hold(0),				// I
+  .halt(0),				// I
+  .irq(0),				// I
+  .nmi(),				// I exp_nmi
+  .PORT_A_IN(),			// I [7:0] empty
+  .PORT_B_IN(reset),	// I [4:0] { cin, rs232_a, rs232_b|reset, shift, reset }
+  .DATA_IN(ram_dout_b),	// I [7:0] data_bus
+  .PORT_A_OUT(KR),		// O [7:0] KR
+  .PORT_B_OUT(),		// O [4:0] empty
+  .ADDRESS(address),	// O [15:0] cpu_addr
+  .DATA_OUT(ram_din_b),	// O [7:0] cpu_dout
+  .E_CLK(E_CLK),		// O E_CLK
+  .rw(rw)				// O cpu_rw
+);
+*/
 
+// VDG
 mc6847 mc6847
 (
   .clk(clk_sys),			// I
-  .clk_ena(clk_vid[2]), 	// I clk_vid[2]
+  .clk_ena(1'b1), 	// I clk_vid[2]
   .reset(reset),			// I
   .da0(),					// O
   .videoaddr(vdg_addr), 	// O [12:0] vdg_addr
@@ -77,37 +104,53 @@ mc6847 mc6847
   .artifact_en(1'b1),		// I
   .artifact_set(1'b0),		// I
   .artifact_phase(1'b1),	// I
-  .cvbs(),					// O [7:0]
+  .cvbs(),					// O [7:0] empty
   .black_backgnd(1'b1),		// I
   .pixel_clk(ce_pix)		// O
 );
 
+wire pia_cs, pia_rw;
+assign pia_cs = (address[14:12] == 3'b000 && address[10] == 1'b1) ? 1'b1 : 1'b0;
+assign pia_rw = (rw == 1'b0 && pia_cs == 1'b1) ? 1'b1 : 1'b0;
+
+// PIA
 pia6821 pia6821
 (
 	.clk(clk_sys), 	// I
 	.rst(reset), 	// I
-	.cs(), 			// I
-	.rw(), 			// I
-	.addr(),  		// I [1:0]
-	.data_in(), 	// I [7:0] 
+	.cs(pia_cs), 	// I
+	.rw(pia_rw), 	// I
+	.addr(address[1:0]), // I [1:0]
+	.data_in(ram_din_a), // I [7:0] 
 	.data_out(),	// O [7:0] 
 	.irqa(), 		// O
 	.irqb(), 		// O
 	.pa_i(),  		// I [7:0]
 	.pa_o(), 		// O [7:0]
-	.pa_oe(), 		// O [7:0]
-	.ca1(), 		// I
-	.ca2_i(), 		// I
-	.ca2_o(), 		// O
-	.ca2_oe(), 		// O
+	.pa_oe(), 		// O [7:0] empty
+	.ca1(1'b1), 	// I
+	.ca2_i(1'b0), 	// I
+	.ca2_o(), 		// O empty
+	.ca2_oe(), 		// O empty
 	.pb_i(),		// I [7:0] 
-	.pb_o(), 		// O [7:0]
-	.pb_oe(),		// O [7:0] 
+	.pb_o(), 		// O [7:0] empty
+	.pb_oe(),		// O [7:0] empty
 	.cb1(), 		// I
-	.cb2_i(), 		// I
-	.cb2_o(), 		// O
-	.cb2_oe() 		// O
+	.cb2_i(1'b0), 	// I
+	.cb2_o(), 		// O empty
+	.cb2_oe() 		// O empty
 );
+
+/*
+// probably not needed if rom and ram are in the same module
+ttl_74153 #() ttl_74153   //AL12-AL17, used for ROM and RAM address decoding
+(
+	.Enable_bar(), 	// I [BLOCKS-1:0]
+	.Select(), 		// I [WIDTH_SELECT-1:0]
+	.A_2D(), 		// I [BLOCKS*WIDTH_IN-1:0]
+	.Y() 			// I [BLOCKS-1:0]
+);
+*/
 
 wire  [7:0]  romDo_apf4000;
 wire [10:0]  romA;
@@ -118,44 +161,30 @@ rom #(.AW(11), .FN("../bios/mame/apf_4000.hex")) Rom_APF4000
 	.data_out   (romDo_apf4000  ),
 	.a          (romA[10:0]     )
 );
-/*
-wire  [7:0]  romDo_modbios;
-wire [11:0]  romB;
-rom #(.AW(16), .FN("../bios/mame/mod-bios.hex")) Rom_modbios
-(
-	.clock      (clk_sys        ),
-	.ce         (1'b1           ),
-	.data_out   (romDo_modbios  ),
-	.a          (romB[10:0]     )
-);
-
-wire  [7:0]  romDo_trashii;
-wire [11:0]  romC;
-rom #(.AW(16), .FN("../bios/mame/trash-ii.hex")) Rom_trashii
-(
-	.clock      (clk_sys        ),
-	.ce         (1'b1           ),
-	.data_out   (romDo_trashii  ),
-	.a          (romC[10:0]     )
-);
-*/
-
-reg  [15:0]  ram_a;  // RAM address
 
 //64k BRAM covering the Imagination Engine Memory Map fully
 dpram #(8, 16) dpram
 (
 	.clk_sys(clk_sys),
 
-	.ram_we(ioctl_wr | cpu_wr),
-	.ram_ad(ioctl_download ? ioctl_addr[11:0] + 'h4000 : ram_a),  
-	.ram_d(ioctl_download ? ioctl_dout : ram_d),
-	.ram_q(ram_q),
+	.ram_we(ioctl_wr | rw),
+	.ram_ad(ioctl_download ? ioctl_addr[11:0] + 'h4000 : address),  
+	.ram_d(ioctl_download ? ioctl_dout : ram_din_a),
+	.ram_q(ram_dout_a),
 
-	.ram_we_b(rw),
-	.ram_ad_b(address),
-	.ram_d_b(ram_din_b),
+	.ram_we_b(),
+	.ram_ad_b(vdg_addr[11:0]),
+	.ram_d_b(),
 	.ram_q_b(ram_dout_b)
+);
+
+keyboard keyboard(
+  .clk_sys(clk_sys),
+  .reset(reset),
+  .ps2_key(ps2_key),
+  .addr(KR),
+  .kb_rows(kb_rows),
+  .kblayout(1'b0)
 );
 
 endmodule

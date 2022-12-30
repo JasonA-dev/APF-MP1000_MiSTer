@@ -60,7 +60,9 @@ V_SRC = \
 	$(RTL)/mc6847/mc6847.v \
 	$(RTL)/mc6847/rom_char.v
 	$(RTL)/mc6800/mc6801_core.v \
-	$(RTL)/mc6821/pia6821.v
+	$(RTL)/mc6800/MC6803_gen2.sv \	
+	$(RTL)/mc6821/pia6821.v \
+	$(RTL)/keyboard.sv
 
 C_SRC = \
 	sim_main.cpp  \
