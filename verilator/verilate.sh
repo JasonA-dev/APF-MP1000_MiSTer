@@ -11,6 +11,5 @@ verilator \
 ../rtl/mc6847/mc6847.v \
 ../rtl/mc6847/rom_char.v \
 ../rtl/mc6800/mc6801_core.v \
-../rtl/mc6800/MC6803_gen2.sv \
-../rtl/mc6821/pia6821.v \
-../rtl/keyboard.sv
+../rtl/mc6821/pia6821.v
+

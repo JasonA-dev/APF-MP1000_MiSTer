@@ -20,20 +20,20 @@
 //
 
 module dpram #(
-    parameter data_width_g = 8,
-    parameter addr_width_g = 14
+    parameter addr_width_g = 14,
+    parameter data_width_g = 8
 ) (
     input   wire                        clk_sys,
 
     // Port A
-    input   wire                        ram_cs,    
+//    input   wire                        ram_cs,    
     input   wire                        ram_we,
     input   wire    [addr_width_g-1:0]  ram_ad,
     input   wire    [data_width_g-1:0]  ram_d,
     output  logic   [data_width_g-1:0]  ram_q,
 
     // Port B
-    input   wire                        ram_cs_b,    
+//    input   wire                        ram_cs_b,    
     input   wire                        ram_we_b,
     input   wire    [addr_width_g-1:0]  ram_ad_b,
     input   wire    [data_width_g-1:0]  ram_d_b,

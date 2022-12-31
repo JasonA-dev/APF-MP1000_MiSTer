@@ -34,7 +34,7 @@ bool run_enable = 0;
 int batchSize = 150000;
 bool single_step = 0;
 bool multi_step = 0;
-int multi_step_amount = 1024;
+int multi_step_amount = 8192;
 
 // Debug GUI 
 // ---------
@@ -70,13 +70,13 @@ const int input_pause = 11;
 
 // Video
 // -----
-#define VGA_WIDTH 128
-#define VGA_HEIGHT 128
+#define VGA_WIDTH 320
+#define VGA_HEIGHT 300
 #define VGA_ROTATE 0  // 90 degrees anti-clockwise
 #define VGA_SCALE_X vga_scale
 #define VGA_SCALE_Y vga_scale
 SimVideo video(VGA_WIDTH, VGA_HEIGHT, VGA_ROTATE);
-float vga_scale = 5;
+float vga_scale = 1.5;
 
 // Verilog module
 // --------------
@@ -87,9 +87,10 @@ double sc_time_stamp() {	// Called by $time in Verilog.
 	return main_time;
 }
 
-int clk_sys_freq = 48000000;
-SimClock clk_48(1); 
-SimClock clk_24(2); 
+//int clk_sys_freq = 48000000;
+int clk_sys_freq = 42954540;
+SimClock clk_48(1);
+SimClock clk_24(12); 
 
 // VCD trace logging
 // -----------------
@@ -303,7 +304,7 @@ int main(int argc, char** argv, char** env) {
 		if (multi_step == 1) { multi_step = 0; }
 		if (ImGui::Button("Multi Step")) { run_enable = 0; multi_step = 1; }
 		//ImGui::SameLine();
-		ImGui::SliderInt("Multi step amount", &multi_step_amount, 8, 1024);
+		ImGui::SliderInt("Multi step amount", &multi_step_amount, 8, 8192);
 		if (ImGui::Button("Load APT"))
     	ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".apt", ".");
 		ImGui::SameLine();
@@ -317,7 +318,7 @@ int main(int argc, char** argv, char** env) {
 
 		// Memory debug
 		ImGui::Begin("ROM");
-		mem_edit.DrawContents(&top->top__DOT__MP1000__DOT__Rom_APF4000__DOT__d, 2048, 0);
+		//mem_edit.DrawContents(&top->top__DOT__MP1000__DOT__Rom_APF4000__DOT__d, 2048, 0);
 		ImGui::End();
 		ImGui::Begin("DPRAM");
 		mem_edit.DrawContents(&top->top__DOT__MP1000__DOT__dpram__DOT__mem, 65536, 0);
@@ -343,8 +344,21 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Text("test_alu:   0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__test_alu);
 		ImGui::Text("test_cc:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__test_cc);	
 		ImGui::Spacing();		
-		ImGui::End();
+		
+		ImGui::Text("ADDR_CTRL:  0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__addr_ctrl);
+		ImGui::Text("PC_CTRL:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__pc_ctrl);
+		ImGui::Text("EA_CTRL:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__ea_ctrl);
+		ImGui::Text("SP_CTRL:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__sp_ctrl);
+		ImGui::Text("IX_CTRL:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__ix_ctrl);
+		ImGui::Text("STATE:      0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__state);
+		ImGui::Text("NEXT_STATE: 0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__next_state);
 
+		ImGui::Text("temp PC:    0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__temppc);
+		ImGui::Text("PC:         0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__pc);
+		ImGui::Text("EA:         0x%02X", top->top__DOT__MP1000__DOT__mc6801__DOT__ea);
+
+		ImGui::Spacing();
+		ImGui::End();
 /*
 		ImGui::Begin("MC6803 CPU");
 		ImGui::Text("RST:         0x%02X", top->top__DOT__MP1000__DOT__mc6803gen2__DOT__RST);	
@@ -382,6 +396,7 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Text("ca2_o:     0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__ca2_o);
 		ImGui::Text("ca2_oe:    0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__ca2_oe);
 		ImGui::Text("pb_i:      0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__pb_i);
+		ImGui::Text("pb_o:      0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__pb_o);
 		ImGui::Text("pb_oe:     0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__pb_oe);
 		ImGui::Text("cb1:       0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__cb1);								
 		ImGui::Text("cb2_i:     0x%02X", top->top__DOT__MP1000__DOT__pia6821__DOT__cb2_i);								
@@ -414,7 +429,13 @@ int main(int argc, char** argv, char** env) {
 		ImGui::Text("artifact_phase: 0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__artifact_phase);
 		ImGui::Text("cvbs:           0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__cvbs);		
 		ImGui::Text("black_backgnd:  0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__black_backgnd);
-		ImGui::Text("pixel_clk:      0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__pixel_clk);		
+		ImGui::Text("pixel_clk:      0x%02X", top->top__DOT__MP1000__DOT__mc6847__DOT__pixel_clk);
+		ImGui::Spacing();
+		ImGui::Spacing();
+		ImGui::Text("vram_addr:      0x%04X", top->top__DOT__MP1000__DOT__vram_addr);
+		ImGui::Text("latch_addr:     0x%04X", top->top__DOT__MP1000__DOT__latch_addr);
+		ImGui::Text("latch_data:     0x%04X", top->top__DOT__MP1000__DOT__latch_data);
+		ImGui::Text("sampler:        0x%04X", top->top__DOT__MP1000__DOT__ag_sampler);
 		ImGui::End();
 
 		// Debug ioctl

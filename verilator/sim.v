@@ -47,7 +47,7 @@ module top(
    assign AUDIO_L = {audio,audio};
    assign AUDIO_R = AUDIO_L;
 
-   assign VGA_DE = ~(HBlank | VBlank);
+//   assign VGA_DE = ~(HBlank | VBlank);
 
 wire ce_pix; // = 1'b1;
 wire reset = ioctl_download;
@@ -59,7 +59,8 @@ always @(posedge clk_48) old_keystb <= ps2_key[10];
 
 MP1000 MP1000
 (
-	.clk_sys(clk_48),
+	.clk_sys(clk_24),
+	.clk_vid(clk_48),
 	.reset(reset),
 	
 	.ioctl_download(ioctl_download),
@@ -69,14 +70,14 @@ MP1000 MP1000
 	.ioctl_dout(ioctl_dout),
 
 	.ps2_key(ps2_key),
+//	.joy0(0),
+//	.joy1(0),
 	.ce_pix(ce_pix),
 
 	.HBlank(HBlank),
 	.HSync(HSync),
 	.VBlank(VBlank),
 	.VSync(VSync),
-
-   .video_de(),  
 
    .red(VGA_R),
    .green(VGA_G),

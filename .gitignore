@@ -42,3 +42,4 @@ verilator/obj_dir/
 verilator/.vs/sim/v17/Browse.VC.db
 verilator/.vs/sim/FileContentIndex/
 verilator/x64/Debug/
+*.obj

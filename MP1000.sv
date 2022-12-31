@@ -206,6 +206,8 @@ assign VIDEO_ARY = (!ar) ? 12'd3 : 12'd0;
 localparam CONF_STR = {
 	"MP1000;;",
 	"-;",
+	"FC1,BIN,Load Cartridge;",
+	"-;",
 	"O[122:121],Aspect ratio,Original,Full Screen,[ARC1],[ARC2];",
 	"O[2],TV Mode,NTSC,PAL;",
 	"O[4:3],Noise,White,Red,Green,Blue;",
@@ -225,15 +227,16 @@ wire  [7:0] ioctl_index;
 wire        ioctl_wr;
 wire [24:0] ioctl_addr;
 wire  [7:0] ioctl_data;
+wire  [21:0] gamma_bus;
 
 wire [31:0] joy0, joy1;
 
 hps_io #(.CONF_STR(CONF_STR)) hps_io
 (
-	.clk_sys(clk_sys),
+	.clk_sys(clk_vid),
 	.HPS_BUS(HPS_BUS),
 	.EXT_BUS(),
-	.gamma_bus(),
+	.gamma_bus(gamma_bus),
 
 	.forced_scandoubler(forced_scandoubler),
 
@@ -256,19 +259,20 @@ hps_io #(.CONF_STR(CONF_STR)) hps_io
 ///////////////////////   CLOCKS   ///////////////////////////////
 
 wire clk_sys, clk_vid;
-assign clk_vid = clk_sys;
+//assign clk_vid = clk_sys;
 pll pll
 (
 	.refclk(CLK_50M),
 	.rst(0),
-	.outclk_0(clk_sys)
+	.outclk_0(clk_sys),
+	.outclk_1(clk_vid)
 );
 
-wire reset = RESET | status[0] | buttons[1];
+wire reset = RESET | status[0] | buttons[1] | ioctl_download;
 
 //////////////////////////////////////////////////////////////////
 
-wire [1:0] col = status[4:3];
+//wire [1:0] col = status[4:3];
 
 wire HBlank;
 wire HSync;
@@ -280,6 +284,7 @@ wire [7:0] video;
 MP1000 MP1000
 (
 	.clk_sys(clk_sys),
+	.clk_vid(clk_vid),
 	.reset(reset),
 	
 	.ioctl_download(ioctl_download),
@@ -289,6 +294,8 @@ MP1000 MP1000
 	.ioctl_dout(ioctl_data),
 
 	.ps2_key(ps2_key),
+	.joy0(joy0),
+	.joy1(joy1),
 	.ce_pix(ce_pix),
 
 	.HBlank(HBlank),
@@ -304,16 +311,54 @@ MP1000 MP1000
 wire [7:0] red, green, blue;
 
 assign CLK_VIDEO = clk_vid;
-assign CE_PIXEL = ce_pix;
+//assign CE_PIXEL = ce_pix;
 
-assign VGA_DE = ~(HBlank | VBlank);
-assign VGA_HS = HSync;
-assign VGA_VS = VSync;
+//assign VGA_DE = ~(HBlank | VBlank);
+//assign VGA_HS = HSync;
+//assign VGA_VS = VSync;
+//
+//assign VGA_R = red;
+//assign VGA_G = green;
+//assign VGA_B = blue;
 
-assign VGA_R = red;
-assign VGA_G = green;
-assign VGA_B = blue;
 
+assign VGA_SL = 0;
+wire freeze_sync;
+
+video_mixer #(.LINE_LENGTH(380), .GAMMA(1)) video_mixer
+(
+	.*,
+
+	.CLK_VIDEO(CLK_VIDEO),
+	.ce_pix(ce_pix),
+	.CE_PIXEL(CE_PIXEL),
+
+	.scandoubler(1'b0),
+//	.hq2x((status[9:7] == 3'd1)),
+	.hq2x(1'b0),
+	.gamma_bus(gamma_bus),
+
+
+	.R(red),
+	.G(green),
+	.B(blue),
+
+	// Positive pulses.
+	.HSync(HSync),
+	.VSync(VSync),
+	.HBlank(HBlank),
+	.VBlank(VBlank),
+	
+//	.HDMI_FREEZE(HDMI_FREEZE),
+//	.freeze_sync(freeze_sync),
+	.VGA_R(VGA_R),
+	.VGA_G(VGA_G),
+	.VGA_B(VGA_B),
+	.VGA_VS(VGA_VS),
+	.VGA_HS(VGA_HS),
+	.VGA_DE(VGA_DE)
+
+);
 /*
 reg  [26:0] act_cnt;
 always @(posedge clk_sys) act_cnt <= act_cnt + 1'd1; 
